@@ -6,7 +6,7 @@ display.set_caption('Shooter')
 window = display.set_mode((win_width, win_height))
 
 img_back = 'b4731cf47a193ff46fa7ef82b637d7fa.jpg'
-img_hero = '7'
+img_hero = 'png'
 
 #mixer.init()
 #mixer.music.load('space.ogg') #music
