@@ -8,9 +8,9 @@ display.set_caption('Shooter')
 window = display.set_mode((win_width, win_height))
 
 img_back = 'b4731cf47a193ff46fa7ef82b637d7fa.jpg'
-img_hero = 'asteroid.png'
-img_bullet = 'bullet.png'
-img_enemy = 'ufo.png'
+img_hero = 'pphoto_5231401404004948259_y.jpg'
+img_bullet = 'photo_5231401404004948259_y.jpg'
+img_enemy = 'photo_5231401404004948259_y.jpg'
 
 score = 0
 lost = 0
@@ -35,7 +35,7 @@ class Player(GameSprite):
         if keys[K_RIGHT] and self.rect.x < win_width -80:
             self.rect.x +=  self.speed
     def fire(self):
-        bullet = Bullet(img_bullet, self.rect.centerx, self.rect.top, 15, 10, -15)
+        bullet: Bullet = Bullet(img_bullet, self.rect.centerx, self.rect.top, 15, 10, -15)
         bullets.add(bullet)
 
 class Bullet(GameSprite):
@@ -52,10 +52,16 @@ class Enemy (GameSprite):
             self.rect.x = randint(80, win_width - 80)
             self.rect.y = -50
             lost += 1
-            
+
 
 ship = Player(img_hero, 5, win_height -80, 80, 100, 10)
 bullets = sprite.Group()
+
+monsters = sprite.Group()
+for i in range(1, 6):
+    monster = Enemy(img_enemy, randint(50, win_width-80), -60, 80, 50, randint(1, 5))
+    monsters.add(monster)
+
 
 
 
@@ -64,9 +70,18 @@ bullets = sprite.Group()
 #mixer.music.play()
 #fire_sound = mixer.Sound('fire.ogg')
 
+font.init()
+font1 = font.Font(None, 80)
+font2 = font.Font(None, 36)
+win = font1.render('You win!', True, (255, 255, 255))
+lose = font1.render('You lose!', True, (255, 0, 0))
+
+
 background = transform.scale(image.load(img_back), (win_width, win_height))
 finish = False
 run = True
+goal = 15
+
 while run:
     for e in event.get():
         if e.type == QUIT:
@@ -80,8 +95,23 @@ while run:
         window.blit(background, (0,0))
         ship.update()
         bullets.update()
+        monsters.update()
+        text = font2.render('Рахунок:' + str(score), True, (255, 255, 255))
+        window.blit(text, (10, 20))
+        text_lose = font2.render('Пропущено:' + str(lost), True, (255, 255, 255))
+        window.blit(text_lose, (10, 50))
+
         ship.reset()
         bullets.draw(window)
+        monsters.draw(window)
+        collides = sprite.groupcollide(monsters, bullets, True, True)
+        for c in collides:
+            score += 1
+            monster = Enemy(img_enemy, randint(50, win_width-80), -60, 80, 50, randint(1,5))
+            monsters.add(monster)
+        if score >= goal:
+            finish = True
+            window,blit(win, (200, 200))
 
         display.update()
     time.delay(50)
