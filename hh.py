@@ -140,9 +140,13 @@ while run:
         text_life = font1.render(str(life), True, life_color)
         window.blit(text_life, (650, 10))
         if sprite.spritecollide(ship, monsters, False):
-        if sprite.spritecollide(ship, monsters, True)
+            sprite.spritecollide(ship, monsters, True)
             life -= 1
-        in life == 0 or lost >= max_lost:
+        if life == 0 or lost >= max_lost:
+            finish = True
+
+
+
         if score >= goal:
             finish = True
             window.blit(win, (200, 200))
